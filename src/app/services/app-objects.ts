@@ -1,0 +1,3 @@
+export class AppObjects{
+    public myDiary = {"employeeName":"","approversName":"","date":"","day":"","client":"","location":"","assignment":"","forFY":"","task":"","inTime":{"hour":"","minute":""},"outTime":{"hour":"","minute":""},"noOfHours":{"hour":"","minute":""},"extraShortHours":{"hour":"","minute":""},"drHours":{"hour":"","minute":""},"crHours":{"hour":"","minute":""},"travellingFrom":"","distanceFromOffice":"","chargeableToClient":"","mode":"","natureOfExpense":"","rate":"","amount":"","workPerformed":""}
+}

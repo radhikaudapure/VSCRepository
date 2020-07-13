@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+.container-fluid,.container{
+margin-top:5%;
+}
+label{
+    font-weight: 500;
+}
+::ng-deep .myCustomModalClass .modal-dialog {
+    margin-top:0px !important;
+}
+.modal-header {
+    padding: 0.5rem 1rem;
+}
+.modal-lg{
+    margin-top:0%;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.under-construction-image{
+content: url(assets/page-under-construction.png);
+}

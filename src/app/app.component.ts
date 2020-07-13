@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import * as moment from 'moment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'EdiaryWeb';
+  showDiv=false;
+
+  toggleDiv(){
+    this.showDiv=!this.showDiv;
+  }
 }

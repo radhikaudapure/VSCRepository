@@ -1,0 +1,413 @@
+<div class="container">
+  <button class="btn btn-sm btn-info" (click)="openModal(content,'add')">ADD Entry</button>
+  <br><br><br>
+  <table class="table table-hover table-responsive-md">
+    <thead class="">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Entry Date</th>
+        <th scope="col">Approver Name</th>
+        <th scope="col">No Of Hours</th>
+        <th scope="col">Status</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let diary of diaryList; index as i">
+        <th scope="row">{{i+1}}</th>
+        <td>{{diary.user.firstName}} {{diary.user.lastName}}</td>
+        <td>{{diary.entryDate | date: 'yyyy-MM-dd'}}</td>
+        <td>{{diary.approver.firstName}} {{diary.approver.lastName}}</td>
+        <td>{{diary.noOfHours | number:'2.1-2'}}</td>
+        <td>{{diary.status}}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="onEditDiary(diary,content)">Edit </button> &nbsp;&nbsp;
+          <button class="btn btn-sm btn-danger" (click)="onDeleteDiary(diary)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>    
+</div>
+<!-- Modal Template -->
+<ng-template #content let-modal>
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-basic-title">My Diary</h5>
+          <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+        </div>
+        <form #myDiaryForm="ngForm" novalidate>
+        <div class="modal-body">
+          <!-- <div class="row">
+            <div class="col-sm-6">
+              <label for="employeeName">Employee :</label>
+            </div>
+            <div class="col-sm-6"></div>
+          </div> -->
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="row">
+              <label for="approversName" class="col-sm-4 col-form-label">Approver :</label>
+              <div class="col-sm-8">
+              <select ngbAutofocus class="form-control form-control-sm" id="approversName" name="approversName"
+              [(ngModel)]="myDiary.approverUserId" approversName #approversName="ngModel" required 
+              [class.is-invalid]="approversName.invalid && approversName.touched">
+                <option value="">Select Approver Name</option>
+                <option *ngFor="let approver of approverList" [value]="approver.userId">{{ approver.firstName }} {{ approver.lastName }}</option>
+              </select>
+              </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class=" row">
+                <label for="dateOfDiary"  class="col-sm-4 col-form-label">Date :</label>
+                <div class="col-sm-8">
+                <div class="input-group">
+                  <input id="dateOfDiary" name="dateOfDiary" class="form-control form-control-sm" placeholder="yyyy-mm-dd" ngbDatepicker #dateOfDiary="ngbDatepicker" 
+                  [(ngModel)]="myDiary.entryDate" dateOfDiary #dateOfDiary="ngModel" required >
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="dateOfDiary.toggle()" type="button"></button>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="row">
+              <label for="clientName" class="col-sm-4 col-form-label">Client :</label>
+              <div class="col-sm-8">
+              <select class="form-control form-control-sm" id="clientName" name="clientName" 
+              [(ngModel)]="myDiary.clientId" clientName #clientName="ngModel" required 
+              [class.is-invalid]="clientName.invalid && clientName.touched">
+                <option value="">Select Client Name</option>
+                <option *ngFor="let client of clientList" [value]="client.id" >{{ client.name }}</option>
+              </select>
+              </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="row">
+                <label for="locationName" class="col-sm-4 col-form-label">Location :</label>
+                <div class="col-sm-8">
+                <select class="form-control form-control-sm" id="locationName" name="locationName" 
+                [(ngModel)]="myDiary.locationId" locationName #locationName="ngModel" required 
+                [class.is-invalid]="locationName.invalid && locationName.touched" >
+                  <option value="">Select Location Name</option>
+                  <option *ngFor="let location of locationList" [value]="location.id">{{ location.name }}</option>
+                </select>
+                </div>
+                </div>
+            </div>
+            <!-- <div class="col-sm-4">
+           <div class="row">
+                <label for="forFY" class="col-sm-4 col-form-label">For FY :</label>
+                <div class="col-sm-8">
+                <select class="form-control form-control-sm" id="forFY" name="forFY" 
+                [(ngModel)]="myDiary.forFy" forFY #forFY="ngModel" required 
+                [class.is-invalid]="forFY.invalid && forFY.touched">
+                  <option value="">Select FY </option>
+                  <option *ngFor="let fy of fyList" [value]="fy.id">{{ fy.name }}</option>
+                </select>
+                </div>
+                </div>
+            </div> -->
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="row">
+                <label for="assignmentName" class="col-sm-4 col-form-label">Assignment :</label>
+                <div class="col-sm-8">
+                <select class="form-control form-control-sm" id="assignmentName" name="assignmentName" 
+                [(ngModel)]="myDiary.assignmentId" assignmentName #assignmentName="ngModel" required
+                [class.is-invalid]="assignmentName.invalid && assignmentName.touched">
+                  <option value="">Select Assignment Name</option>
+                  <option *ngFor="let assignment of assignmentList" [value]="assignment.id">{{ assignment.name }}</option>
+                </select>
+                </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="row">
+              <label for="taskName" class="col-sm-4 col-form-label">Task :</label>
+              <div class="col-sm-8">
+              <select class="form-control form-control-sm" id="taskName" name="taskName" 
+              [(ngModel)]="myDiary.taskId" taskName #taskName="ngModel" required 
+              [class.is-invalid]="taskName.invalid && taskName.touched">
+                <option value="">Select Task</option>
+                <option *ngFor="let task of taskList" [value]="task.id">{{ task.name }}</option>
+              </select>
+              </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="row">
+                <label for="inTime" class="col-sm-4 col-form-label">In Time :</label>
+                <div class="col-sm-8">
+                  <ngb-timepicker id="inTime" name="inTime" [(ngModel)]="myDiary.inTime" inTime #inTime="ngModel" required></ngb-timepicker>
+                  <span class="text-danger" *ngIf="inTime.touched && !inTime.valid">enter inTime</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="row">
+                <label for="outTime" class="col-sm-4 col-form-label">Out Time :</label>
+                <div class="col-sm-8">
+                  <ngb-timepicker id="outTime" name="outTime" [(ngModel)]="myDiary.outTime" outTime #outTime="ngModel" required
+                   (ngModelChange)="onChangeOutTime(myDiary.outTime)" ></ngb-timepicker>
+                  <span class="text-danger" *ngIf="outTime.touched && !outTime.valid">enter outTime</span>
+                </div>
+              </div>
+            </div>
+          </div>
+         
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="row">
+                <label for="inTime" class="col-sm-4 col-form-label">NoOfHours :</label>
+                <div class="col-sm-8 col-form-label">{{myDiary.noOfHours.hour}} Hours : {{myDiary.noOfHours.minute}} Minutes</div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="row">
+                <label for="outTime" class="col-sm-4 col-form-label">Extra Hours :</label>
+                <div class="col-sm-8"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="row">
+                <label for="inTime" class="col-sm-4 col-form-label">Dr Hours :</label>
+                <div class="col-sm-8 col-form-label">{{myDiary.debitedHours.hour}} Hours : {{myDiary.debitedHours.minute}} Minutes</div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class=" row">
+                <label for="outTime" class="col-sm-4 col-form-label">Cr Hours :</label>
+                <div class="col-sm-8 col-form-label">{{myDiary.creditedHours.hour}} Hours : {{myDiary.creditedHours.minute}} Minutes</div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-4" style="padding-right: 0px;">
+                <label for="travellingFrom" class="col-form-label">Travelling From :</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="travellingFrom" id="inlineRadio1" [value]="'Office to Client'" 
+                  [(ngModel)]="myDiary.travellingFrom">
+                  <label class="col-form-label" style="font-weight: 400;">Office to Client</label>
+                </div>
+  
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="travellingFrom" id="inlineRadio2" [value]="'Home to Client / Other'" 
+                  [(ngModel)]="myDiary.travellingFrom">
+                  <label class="col-form-label" style="font-weight: 400;">Home to Client / Other</label>
+                </div>
+  
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="travellingFrom" id="inlineRadio3" [value]="'NA'" 
+                  [(ngModel)]="myDiary.travellingFrom">
+                  <label class="col-form-label" style="font-weight: 400;">NA</label>
+                </div>
+              </div>
+              <div class="col-sm-4" style="padding: 0px;"> 
+                <label for="mode" class="col-form-label">Mode :</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="mode" id="inlineRadio1" [value]="'Two Wheeler'" 
+                  [(ngModel)]="myDiary.mode" >
+                  <label class="col-form-label" style="font-weight: 400;">Two Wheeler</label>
+                </div>
+  
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="mode" id="inlineRadio2" [value]="'Four Wheeler'" 
+                  [(ngModel)]="myDiary.mode">
+                  <label class="col-form-label" style="font-weight: 400;">Four Wheeler</label>
+                </div>
+  
+                <div class="form-check ">
+                  <input class="form-check-input" type="radio" name="mode" id="inlineRadio3" [value]="'Bus/Auto/Other'" 
+                  [(ngModel)]="myDiary.mode">
+                  <label class="col-form-label" style="font-weight: 400;">Bus/Auto/Other</label>
+                </div>
+  
+              </div>
+              <div class="col-sm-4"> 
+                <div class="row">
+                  <div class="col-sm-8" style="padding: 0px;"><label class="col-form-label">Distance From Office</label></div>
+                  <div class="col-sm-4" style="padding: 0px;"><label class="col-form-label">: {{myDiary.distanceFromOffice}}</label></div>  
+                </div>
+                <div class="row">
+                  <div class="col-sm-8" style="padding: 0px;"><label class="col-form-label">Chargable To Client</label></div>
+                  <div class="col-sm-4" style="padding: 0px;">
+                    <label class="col-form-label" *ngIf="myDiary.chargeableToClient">: Yes</label>
+                    <label class="col-form-label" *ngIf="!myDiary.chargeableToClient">: No</label>
+                  </div>  
+                </div>
+                <div class="row">
+                  <div class="col-sm-8" style="padding: 0px;"><label class="col-form-label">Rate</label></div>
+                  <div class="col-sm-4" style="padding: 0px;"><label class="col-form-label">: {{myDiary.rate}}</label></div>  
+                </div>
+                <div class="row">
+                  <div class="col-sm-8" style="padding: 0px;"><label class="col-form-label">Amount</label></div>
+                  <div class="col-sm-4" style="padding: 0px;"><label class="col-form-label">: {{myDiary.amount}}</label></div>  
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          </div>
+         
+          <!-- 
+            <hr>
+            <div class="row">
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-5">
+                  <label for="travellingFrom" class="col-form-label">Travelling From :</label>&nbsp;&nbsp;&nbsp;
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="travellingFrom" id="inlineRadio1" [value]="'Office to Client'" 
+                    [(ngModel)]="myDiary.travellingFrom">
+                    <label class="col-form-label" style="font-weight: 400;">Office to Client</label>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="travellingFrom" id="inlineRadio2" [value]="'Home to Client / Other'" 
+                    [(ngModel)]="myDiary.travellingFrom">
+                    <label class="col-form-label" style="font-weight: 400;">Home to Client / Other</label>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="travellingFrom" id="inlineRadio3" [value]="'NA'" 
+                    [(ngModel)]="myDiary.travellingFrom">
+                    <label class="col-form-label" style="font-weight: 400;">NA</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- <div class="row">
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">Distance From Office : &nbsp;&nbsp;&nbsp;{{myDiary.distanceFromOffice}}</label>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">Chargable To Client : &nbsp;&nbsp;&nbsp;{{myDiary.chargeableToClient}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- <div class="row">
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-5">
+                  <label for="mode" class="col-form-label">Mode :</label>&nbsp;&nbsp;&nbsp;
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="mode" id="inlineRadio1" [value]="'Two Wheeler'" 
+                    [(ngModel)]="myDiary.mode" >
+                    <label class="col-form-label" style="font-weight: 400;">Two Wheeler</label>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="mode" id="inlineRadio2" [value]="'Four Wheeler'" 
+                    [(ngModel)]="myDiary.mode">
+                    <label class="col-form-label" style="font-weight: 400;">Four Wheeler</label>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="mode" id="inlineRadio3" [value]="'Bus/Auto/Other'" 
+                    [(ngModel)]="myDiary.mode">
+                    <label class="col-form-label" style="font-weight: 400;">Bus/Auto/Other</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- <div class="row">
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-2">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">Rate : {{myDiary.rate}}</label>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">Amount :{{myDiary.amount}} </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+      
+          <hr>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Work Performed :</label>
+                <div class="col-sm-9">
+                  <textarea style="overflow:auto;resize:none" rows="2" class="form-control form-control-sm" id="workPerformed" name="workPerformed" 
+                  [(ngModel)]="myDiary.workPerformed" required workPerformed #workPerformed="ngModel" [class.is-invalid]="workPerformed.invalid && workPerformed.touched"></textarea>
+                  <span class="text-danger" *ngIf="workPerformed.touched && !workPerformed.valid">enter work performed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <!-- {{myDiaryForm.value | json}} {{myDiaryForm.valid | json}} -->
+          <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-sm btn-block btn-outline-secondary" (click)="closeModal()" >Close</button> 
+            </div>
+            <div class="col-sm-3">
+              <ng-template #popContent>
+                <b *ngIf="!myDiaryForm.form.invalid">Click To Save  </b>
+                <b *ngIf="myDiaryForm.form.invalid">Please Fill Up The Form</b>
+              </ng-template>
+              <ng-template #popTitle>
+                <b class="text-success" *ngIf="!myDiaryForm.form.invalid">OK !</b>
+                <b  class="text-danger" *ngIf="myDiaryForm.form.invalid">Error !</b>
+              </ng-template>
+              <button *ngIf="modalStatus=='add'" type="button" class="btn btn-sm btn-block btn-outline-info" 
+              (click)="onSaveDiary(myDiaryForm)" triggers="mouseenter:mouseleave" [ngbPopover]="popContent" [popoverTitle]="popTitle">Save</button>
+              <button *ngIf="modalStatus=='edit'" type="button" [disabled]="myDiaryForm.form.invalid" class="btn btn-sm btn-block btn-outline-info" (click)="onUpdateDiary(myDiaryForm)">Update</button>
+            </div>
+           </div> 
+        </div>
+    
+      </form>
+      </ng-template>
+
+      <!-- {{myDiary | json}} -->
+      
+      <!-- <button class="btn btn-sm btn-outline-primary" (click)="open(content)">Launch demo modal</button>
+      
+      <hr>
+      
+      <pre>{{ closeResult }}</pre> -->
+<!-- <button type="button" class="btn btn-sm  btn-outline-dark" >Close</button>         
+              <button type="button" ngbAutofocus class="btn btn-sm btn-outline-info" (click)="onSaveDiary(myDiaryForm)">Save</button> -->
