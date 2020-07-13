@@ -12,4 +12,5 @@ export class AppComponent {
   toggleDiv(){
     this.showDiv=!this.showDiv;
   }
+  
 }
